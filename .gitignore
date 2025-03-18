@@ -1,0 +1,9 @@
+*.log
+*.pot
+*.pyc
+__pycache__
+.vscode/
+.env
+env
+db.sqlite3
+test.db
