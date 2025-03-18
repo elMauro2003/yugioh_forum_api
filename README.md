@@ -44,6 +44,19 @@ env\Scripts\activate
 pip install -r requirements.txt
 ```
 
+## Configure .env file with environment variables
+
+
+Create your .env and configure it if you use production environment. 
+
+Run db.sqlite3 by default
+
+```
+DATABASE_URL = <''>    # default sqlite:///./test.db in postgres case 'postgresql://user:password@host:port/database_name'
+
+```
+
+
 ## Run server
 
 ```python
