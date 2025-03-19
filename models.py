@@ -4,6 +4,12 @@ from database import Base
 import enum
 import datetime
 
+class PostCategory(enum.Enum):
+    Actualitation = "Actualitation"
+    Event = "Event"
+    Vote = "Vote"
+    Error = "Error"
+    
 class PostType(enum.Enum):
     Reporte = "Reporte"
     Sugerencia = "Sugerencia"
@@ -21,12 +27,15 @@ class Post(Base):
     titulo = Column(String, index=True)
     fecha_creacion = Column(DateTime, default=datetime.datetime.utcnow)
     tipo = Column(Enum(PostType))
+    category = Column(Enum(PostCategory))
     descripcion = Column(String)
     likes = Column(Integer, default=0)
     usuario_id = Column(Integer, ForeignKey("usuarios.id"))
-
+    
     usuario = relationship("Usuario", back_populates="posts")
 
+        
+        
 class Comentario(Base):
     __tablename__ = "comentarios"
     id = Column(Integer, primary_key=True, index=True)

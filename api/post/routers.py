@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from cruds.post import crud_get_post, crud_get_all_posts, crud_create_post as crud_create_post, crud_update_post, crud_delete_post, crud_like_post
-from schemas import PostSchema, PostSchemaCreate, PostSchemaUpdate
+from api.post.crud import crud_get_post, crud_get_all_posts, crud_create_post as crud_create_post, crud_update_post, crud_delete_post, crud_like_post
+from api.post.schema import PostSchema, PostSchemaCreate, PostSchemaUpdate
 from database import get_db
 
 router = APIRouter()

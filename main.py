@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routers import users, posts, comments, auth_user
+from routers import users, posts, comments, auth_user,example
 from decouple import config
+from fastapi_pagination import  add_pagination
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-
+add_pagination(app) 
 # Configuración de CORS
 LIST_ALLOWED_HOSTS = config('ALLOWED_HOSTS',default='*')
 ALLOWED_HOSTS = LIST_ALLOWED_HOSTS.split(",")
@@ -25,3 +26,4 @@ app.include_router(users.router, prefix="/users", tags=["users"])
 app.include_router(posts.router, prefix="/posts", tags=["posts"])
 app.include_router(comments.router, prefix="/comments", tags=["comments"])
 app.include_router(auth_user.router, prefix="/auth", tags=["auth"])
+app.include_router(example.router,prefix='/items',tags=["items"])
