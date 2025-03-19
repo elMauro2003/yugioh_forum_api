@@ -3,6 +3,10 @@ from typing import List, Optional
 import datetime
 import enum
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 class PostType(str, enum.Enum):
     Reporte = "Reporte"
     Sugerencia = "Sugerencia"
