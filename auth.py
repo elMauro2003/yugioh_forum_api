@@ -18,9 +18,19 @@ def generar_codigo():
 def autenticar_usuario(email: str, db: Session):
     usuario = db.query(Usuario).filter(Usuario.email == email).first()
     if usuario:
-        usuario.codigo = generar_codigo()
+        codigo = generar_codigo()
+        usuario.codigo = codigo
         db.commit()
         db.refresh(usuario)
+        print(f"Código de verificación para {email}: {codigo}")  # Solo para pruebas
         return usuario
     else:
         raise HTTPException(status_code=400, detail="Usuario no encontrado")
+    
+    
+def verificar_codigo(email: str, codigo: str, db: Session):
+    usuario = db.query(Usuario).filter(Usuario.email == email, Usuario.codigo == codigo).first()
+    if usuario:
+        return True
+    else:
+        return False
