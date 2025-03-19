@@ -2,20 +2,19 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
 from routers import users, posts, comments, auth_user
+from decouple import config
 
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
 # Configuración de CORS
-origins = [
-    "http://127.0.0.1:5500",  # Dirección del frontend
-    "http://localhost:5500"   # Otra posible dirección del frontend
-]
+LIST_ALLOWED_HOSTS = config('ALLOWED_HOSTS',default='*')
+ALLOWED_HOSTS = LIST_ALLOWED_HOSTS.split(",")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=ALLOWED_HOSTS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

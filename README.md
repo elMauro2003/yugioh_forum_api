@@ -53,6 +53,7 @@ Run db.sqlite3 by default
 
 ```
 DATABASE_URL = <''>    # default sqlite:///./test.db in postgres case 'postgresql://user:password@host:port/database_name'
+ALLOWED_HOSTS = <example.com, example2.com >  # default '*'
 
 ```
 
