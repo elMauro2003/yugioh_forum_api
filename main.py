@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routers import users, comments, auth_user
+from routers import users, auth_user
 from api.post import post_routers
 from api.comment import comment_routers
 from decouple import config

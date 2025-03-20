@@ -6,7 +6,7 @@ from api.post.schema import PostSchema, PostSchemaCreate, PostSchemaUpdate
 from database import get_db
 from models import Post
 from fastapi_filter import FilterDepends, with_prefix
-from filters.post_filter import PostFilter
+from api.post.post_filter import PostFilter
 from sqlalchemy import select, func
 
 router = APIRouter()

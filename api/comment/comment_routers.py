@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from crud import crud_get_comment, crud_get_all_comments, crud_create_comment, crud_update_comment, crud_delete_comment, crud_like_comment
+from api.comment.crud import crud_get_comment, crud_create_comment, crud_update_comment, crud_delete_comment, crud_like_comment
 from models import Comment
 from api.comment.schema import CommentSchema, CommentSchemaCreate, CommentSchemaUpdate
 from database import get_db
