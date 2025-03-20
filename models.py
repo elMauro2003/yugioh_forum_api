@@ -9,11 +9,12 @@ class PostCategory(enum.Enum):
     Event = "Event"
     Vote = "Vote"
     Error = "Error"
-    
+
+
 class PostType(enum.Enum):
-    Reporte = "Reporte"
-    Sugerencia = "Sugerencia"
-    Comentario = "Comentario"
+    Report = "Report"
+    Suggestion = "Suggestion"
+    Comment = "Comment"
 
 class User(Base):
     __tablename__ = "users"
@@ -41,6 +42,7 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, index=True)
     description = Column(String)
     likes = Column(Integer, default=0)
+    create_at = Column(DateTime, default=datetime.datetime.utcnow)
     post_id = Column(Integer, ForeignKey("posts.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
 

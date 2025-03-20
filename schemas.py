@@ -14,10 +14,10 @@ class UserSchemaBase(BaseModel):
     email: str
 
 class UserSchemaCreate(UserSchemaBase):
-    codigo: str
+    pass
 
 class UserSchemaUpdate(UserSchemaBase):
-    codigo: str
+    pass
 
 class UserSchema(UserSchemaBase):
     id: int
