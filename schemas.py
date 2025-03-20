@@ -2,50 +2,47 @@ from pydantic import BaseModel, validator
 from typing import List, Optional
 import datetime
 import enum
+from api.post.schema import PostSchema
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-class PostType(str, enum.Enum):
-    Reporte = "Reporte"
-    Sugerencia = "Sugerencia"
-    Comentario = "Comentario"
 
 
-class UsuarioBase(BaseModel):
+class UserSchemaBase(BaseModel):
     email: str
 
-class UsuarioCreate(UsuarioBase):
+class UserSchemaCreate(UserSchemaBase):
     codigo: str
 
-class UsuarioUpdate(UsuarioBase):
+class UserSchemaUpdate(UserSchemaBase):
     codigo: str
 
-class Usuario(UsuarioBase):
+class UserSchema(UserSchemaBase):
     id: int
     posts: List['PostSchema'] = []
-    comentarios: List['Comentario'] = []
+    comentarios: List['CommentSchema'] = []
 
     class Config:
         orm_mode = True
 
 
 
-class ComentarioBase(BaseModel):
-    descripcion: str
+class CommentSchemaBase(BaseModel):
+    description: str
 
-class ComentarioCreate(ComentarioBase):
+class CommentSchemaCreate(CommentSchemaBase):
     pass
 
-class ComentarioUpdate(ComentarioBase):
+class CommentSchemaUpdate(CommentSchemaBase):
     pass
 
-class Comentario(ComentarioBase):
+class CommentSchema(CommentSchemaBase):
     id: int
     likes: int
     post_id: int
-    usuario_id: int
+    user_id: int
 
     class Config:
         orm_mode = True

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from models import Post
-from schemas import PostSchemaCreate, PostSchemaUpdate
+from api.post.schema import PostSchemaCreate, PostSchemaUpdate
 
 
 def crud_get_post(db: Session, post_id: int):
@@ -9,8 +9,8 @@ def crud_get_post(db: Session, post_id: int):
 def crud_get_all_posts(db: Session, skip: int = 0, limit: int = 10):
     return db.query(Post).offset(skip).limit(limit).all()
 
-def crud_create_post(db: Session, post: PostSchemaCreate, usuario_id: int):
-    db_post = Post(**post.dict(), usuario_id=usuario_id)
+def crud_create_post(db: Session, post: PostSchemaCreate, user_id: int):
+    db_post = Post(**post.dict(), user_id=user_id)
     db.add(db_post)
     db.commit()
     db.refresh(db_post)

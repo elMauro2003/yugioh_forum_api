@@ -8,8 +8,8 @@ from database import get_db
 router = APIRouter()
 
 @router.post("/", response_model=PostSchema)
-def create_post(post: PostSchemaCreate, usuario_id: int, db: Session = Depends(get_db)):
-    return crud_create_post(db, post, usuario_id)
+def create_post(post: PostSchemaCreate, user_id: int, db: Session = Depends(get_db)):
+    return crud_create_post(db, post, user_id)
 
 @router.get("/{post_id}", response_model=PostSchema)
 def read_post(post_id: int, db: Session = Depends(get_db)):

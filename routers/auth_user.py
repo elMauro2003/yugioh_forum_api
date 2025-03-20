@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from database import get_db
-from auth import autenticar_usuario, verificar_codigo, check_token, create_access_token, create_refresh_token, verify_token
+from auth import autenticated_user, verify_code, check_token, create_access_token, create_refresh_token, verify_token
 from schemas import Token
 from jose import JWTError
 
@@ -15,22 +15,22 @@ class AuthRequest(BaseModel):
 
 class VerifyRequest(BaseModel):
     email: str
-    codigo: str
+    code: str
     
 class RefreshRequest(BaseModel):
     refresh_token: str
 
 @router.post("/auth")
 def authenticate_user(request: AuthRequest, db: Session = Depends(get_db)):
-    usuario = autenticar_usuario(request.email, db)
-    if usuario:
-        return {"message": "Código enviado al usuario", "email": usuario.email}
+    user = autenticated_user(request.email, db)
+    if user:
+        return {"message": "Código enviado al usuario", "email": user.email}
     else:
         raise HTTPException(status_code=400, detail="Usuario no encontrado")
 
 # @router.post("/verify")
 # def verify_code(request: VerifyRequest, db: Session = Depends(get_db)):
-#     if verificar_codigo(request.email, request.codigo, db):
+#     if verify_code(request.email, request.code, db):
 #         # Crear un token JWT
 #         token = create_access_token({"sub": request.email})
 #         return {"message": "Autenticación exitosa"}
@@ -39,7 +39,7 @@ def authenticate_user(request: AuthRequest, db: Session = Depends(get_db)):
 
 @router.post("/verify")
 def verify_code(request: VerifyRequest, db: Session = Depends(get_db)):
-    if verificar_codigo(request.email, request.codigo, db):
+    if verify_code(request.email, request.code, db):
         # Crear tokens
         access_token = create_access_token({"sub": request.email})
         refresh_token = create_refresh_token({"sub": request.email})
@@ -53,7 +53,7 @@ def verify_code(request: VerifyRequest, db: Session = Depends(get_db)):
 
 @router.post("/token", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    usuario = autenticar_usuario(form_data.username, db)
+    usuario = autenticated_user(form_data.username, db)
     if not usuario:
         raise HTTPException(status_code=400, detail="Credenciales incorrectas")
     token = create_access_token({"sub": usuario.email})

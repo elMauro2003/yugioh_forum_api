@@ -61,7 +61,7 @@ async def get_items_filter(
     
     query = query.offset(offset).limit(limit)
     result = db.execute(query)
-
+  
     return {
         "posts": [PostSchema.from_orm(post) for post in result.scalars().all()],
         "total_objects": total,

@@ -14,18 +14,18 @@ class PostCategory(str, enum.Enum):
 
 
 class PostType(str, enum.Enum):
-    Reporte = "Reporte"
-    Sugerencia = "Sugerencia"
-    Comentario = "Comentario"
+    Report = "Report"
+    Suggestion = "Suggestion"
+    Comment = "Comment"
 
 
 class PostFilter(Filter):
-    titulo__ilike: Optional[str]= None
-    tipo : Optional[str] = None
+    title__ilike: Optional[str]= None
+    type : Optional[str] = None
     category : Optional[str] = None
-    descripcion__ilike: Optional[str]= None
+    description__ilike: Optional[str]= None
     order_by: Optional[list[str]] = None
     
     class Constants(Filter.Constants):
         model = Post
-        search_model_fields = ["titulo", "descripcion"]
+        search_model_fields = ["title", "description"]

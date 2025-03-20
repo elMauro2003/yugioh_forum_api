@@ -2,7 +2,11 @@ from pydantic import BaseModel, validator
 from typing import List, Optional
 import datetime
 import enum
-from schemas import Comentario
+
+# from schemas import SchemaComment
+
+
+# from schemas import Comentario
 
 
 class PostCategory(str, enum.Enum):
@@ -13,15 +17,15 @@ class PostCategory(str, enum.Enum):
 
 
 class PostType(str, enum.Enum):
-    Reporte = "Reporte"
-    Sugerencia = "Sugerencia"
-    Comentario = "Comentario"
+    Report = "Report"
+    Suggestion = "Suggestion"
+    Comment = "Comment"
 
 class PostSchemaBase(BaseModel):
-    titulo: str
-    tipo: PostType
+    title: str
+    type: PostType
     category: PostCategory
-    descripcion: str
+    description: str
 
 class PostSchemaCreate(PostSchemaBase):
     pass
@@ -31,11 +35,11 @@ class PostSchemaUpdate(PostSchemaBase):
 
 class PostSchema(PostSchemaBase):
     id: int
-    fecha_creacion: datetime.datetime
+    create_at: datetime.datetime
     likes: int
-    usuario_id: int
-    comentarios: List['Comentario'] = []
-    total_comments: int
+    user_id: int
+    # comentarios: List['SchemaComment'] = []
+    # total_comments: int
 
     class Config:
         orm_mode = True

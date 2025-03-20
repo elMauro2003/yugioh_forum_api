@@ -15,38 +15,38 @@ class PostType(enum.Enum):
     Sugerencia = "Sugerencia"
     Comentario = "Comentario"
 
-class Usuario(Base):
-    __tablename__ = "usuarios"
+class User(Base):
+    __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True)
-    codigo = Column(String, index=True)
+    code = Column(String, index=True)
 
 class Post(Base):
     __tablename__ = "posts"
     id = Column(Integer, primary_key=True, index=True)
-    titulo = Column(String, index=True)
-    fecha_creacion = Column(DateTime, default=datetime.datetime.utcnow)
-    tipo = Column(Enum(PostType))
+    title = Column(String, index=True)
+    create_at = Column(DateTime, default=datetime.datetime.utcnow)
+    type = Column(Enum(PostType))
     category = Column(Enum(PostCategory))
-    descripcion = Column(String)
+    description = Column(String)
     likes = Column(Integer, default=0)
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
     
-    usuario = relationship("Usuario", back_populates="posts")
+    user = relationship("User", back_populates="posts")
 
         
         
-class Comentario(Base):
-    __tablename__ = "comentarios"
+class Comment(Base):
+    __tablename__ = "comments"
     id = Column(Integer, primary_key=True, index=True)
-    descripcion = Column(String)
+    description = Column(String)
     likes = Column(Integer, default=0)
     post_id = Column(Integer, ForeignKey("posts.id"))
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
 
-    post = relationship("Post", back_populates="comentarios")
-    usuario = relationship("Usuario", back_populates="comentarios")
+    post = relationship("Post", back_populates="comments")
+    user = relationship("User", back_populates="comments")
 
-Usuario.posts = relationship("Post", back_populates="usuario")
-Usuario.comentarios = relationship("Comentario", back_populates="usuario")
-Post.comentarios = relationship("Comentario", back_populates="post")
+User.posts = relationship("Post", back_populates="user")
+User.comments = relationship("Comment", back_populates="user")
+Post.comments = relationship("Comment", back_populates="post")
