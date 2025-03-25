@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from database import get_db
-from auth import autenticated_user, verify_code, check_token, create_access_token, create_refresh_token, verify_token
+from auth import autenticated_user, auth_verify_code, check_token, create_access_token, create_refresh_token, verify_token
 from schemas import Token
 from jose import JWTError
 
@@ -24,7 +24,7 @@ class RefreshRequest(BaseModel):
 def authenticate_user(request: AuthRequest, db: Session = Depends(get_db)):
     user = autenticated_user(request.email, db)
     if user:
-        return {"message": "Código enviado al usuario", "email": user.email}
+        return {"message": "Código enviado al usuario", "email": user.email, "code": user.code }
     else:
         raise HTTPException(status_code=400, detail="Usuario no encontrado")
 
@@ -39,11 +39,12 @@ def authenticate_user(request: AuthRequest, db: Session = Depends(get_db)):
 
 @router.post("/verify")
 def verify_code(request: VerifyRequest, db: Session = Depends(get_db)):
-    if verify_code(request.email, request.code, db):
+    if auth_verify_code(request.email, request.code, db):
         # Crear tokens
         access_token = create_access_token({"sub": request.email})
         refresh_token = create_refresh_token({"sub": request.email})
         return {
+            "user_email": request.email,
             "access_token": access_token,
             "refresh_token": refresh_token,
             "token_type": "bearer"

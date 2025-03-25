@@ -36,12 +36,12 @@ def autenticated_user(email: str, db: Session):
         user.code = code
         db.commit()
         db.refresh(user)
-        return user
+        return  user
     else:
         raise HTTPException(status_code=400, detail="Usuario no encontrado")
     
     
-def verify_code(email: str, code: str, db: Session):
+def auth_verify_code(email: str, code: str, db: Session):
     user = db.query(User).filter(User.email == email, User.code == code).first()
     if user:
         return True
