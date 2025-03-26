@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from database import Base
 import enum
 import datetime
+from pydantic import BaseModel
 
 class PostCategory(enum.Enum):
     Actualitation = "Actualitation"
@@ -15,6 +16,12 @@ class PostType(enum.Enum):
     Report = "Report"
     Suggestion = "Suggestion"
     Comment = "Comment"
+    
+class PostSchemaCreate(BaseModel):
+    title: str
+    type: PostType
+    category: PostCategory
+    description: str
 
 class User(Base):
     __tablename__ = "users"

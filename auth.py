@@ -36,6 +36,7 @@ def autenticated_user(email: str, db: Session):
         user.code = code
         db.commit()
         db.refresh(user)
+        print(f"Código generado para el usuario {email}: {code}")
         return  user
     else:
         raise HTTPException(status_code=400, detail="Usuario no encontrado")
@@ -81,14 +82,6 @@ def check_token(token: str):
     except JWTError:
         raise HTTPException(status_code=401, detail="Token inválido o expirado")
     
-    
-
-# def obtener_usuario_actual(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
-#     email = check_token(token)
-#     usuario = db.query(Usuario).filter(Usuario.email == email).first()
-#     if usuario is None:
-#         raise HTTPException(status_code=401, detail="Usuario no encontrado")
-#     return usuario
 
 def get_actual_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:

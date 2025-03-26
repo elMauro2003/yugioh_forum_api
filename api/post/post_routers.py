@@ -8,12 +8,26 @@ from models import Post
 from fastapi_filter import FilterDepends, with_prefix
 from api.post.post_filter import PostFilter
 from sqlalchemy import select, func
+from datetime import datetime
+from auth import get_actual_user
 
 router = APIRouter()
 
-@router.post("/", response_model=PostSchema)
-def create_post(post: PostSchemaCreate, user_id: int, db: Session = Depends(get_db)):
-    return crud_create_post(db, post, user_id)
+@router.post("/")
+def create_post(post: PostSchemaCreate, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
+    # Crear un nuevo post asociado al usuario autenticado
+    nuevo_post = Post(
+        title=post.title,
+        type=post.type,
+        category=post.category,
+        description=post.description,
+        user_id=usuario.id,  # Obtener el ID del usuario autenticado
+        create_at=datetime.utcnow()
+    )
+    db.add(nuevo_post)
+    db.commit()
+    db.refresh(nuevo_post)
+    return nuevo_post
 
 @router.get("/{post_id}", response_model=PostSchema)
 def read_post(post_id: int, db: Session = Depends(get_db)):
