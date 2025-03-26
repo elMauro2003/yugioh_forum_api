@@ -30,7 +30,7 @@ def create_post(post: PostSchemaCreate, db: Session = Depends(get_db), usuario=D
     return nuevo_post
 
 @router.get("/{post_id}", response_model=PostSchema)
-def read_post(post_id: int, db: Session = Depends(get_db)):
+def read_post(post_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     db_post = crud_get_post(db, post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")
@@ -38,7 +38,7 @@ def read_post(post_id: int, db: Session = Depends(get_db)):
 
 @router.get("/")
 async def get_all_posts(
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_db), usuario=Depends(get_actual_user),
     post_filter: PostFilter = FilterDepends(with_prefix("post", PostFilter), by_alias=True),
     page: int = 1,
     limit: int = 25,
@@ -62,21 +62,21 @@ async def get_all_posts(
     }
 
 @router.put("/{post_id}", response_model=PostSchema)
-def update_post(post_id: int, post: PostSchemaUpdate, db: Session = Depends(get_db)):
+def update_post(post_id: int, post: PostSchemaUpdate, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     db_post = crud_update_post(db, post_id, post)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")
     return db_post
 
 @router.delete("/{post_id}", response_model=PostSchema)
-def delete_post(post_id: int, db: Session = Depends(get_db)):
+def delete_post(post_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     db_post = crud_delete_post(db, post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")
     return db_post
 
 @router.post("/{post_id}/like", response_model=PostSchema)
-def like_post(post_id: int, db: Session = Depends(get_db)):
+def like_post(post_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     db_post = crud_like_post(db, post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")

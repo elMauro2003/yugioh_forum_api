@@ -8,15 +8,16 @@ from database import get_db
 from api.comment.comment_filter import CommentFilter
 from sqlalchemy import select, func
 from fastapi_filter import FilterDepends, with_prefix
+from auth import get_actual_user
 
 router = APIRouter()
 
 @router.post("/", response_model=CommentSchema)
-def create_comment(comment: CommentSchemaCreate, post_id: int, user_id: int, db: Session = Depends(get_db)):
+def create_comment(comment: CommentSchemaCreate, post_id: int, user_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     return crud_create_comment(db, comment, post_id, user_id)
 
 @router.get("/{comment_id}", response_model=CommentSchema)
-def read_comment(comment_id: int, db: Session = Depends(get_db)):
+def read_comment(comment_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     db_comment = crud_get_comment(db, comment_id)
     if db_comment is None:
         raise HTTPException(status_code=404, detail="Comentario no encontrado")
@@ -24,7 +25,7 @@ def read_comment(comment_id: int, db: Session = Depends(get_db)):
 
 @router.get("/")
 async def get_all_comments(
-    db: Session = Depends(get_db),
+    db: Session = Depends(get_db), usuario=Depends(get_actual_user),
     comment_filter: CommentFilter = FilterDepends(with_prefix("comment", CommentFilter), by_alias=True),
     page: int = 1,
     limit: int = 25,
@@ -49,21 +50,21 @@ async def get_all_comments(
     }
 
 @router.put("/{comment_id}", response_model=CommentSchema)
-def update_comment(comment_id: int, comment: CommentSchemaUpdate, db: Session = Depends(get_db)):
+def update_comment(comment_id: int, comment: CommentSchemaUpdate, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     db_comment = crud_update_comment(db, comment_id, comment)
     if db_comment is None:
         raise HTTPException(status_code=404, detail="Comentario no encontrado")
     return db_comment
 
 @router.delete("/{comment_id}", response_model=CommentSchema)
-def delete_comment(comment_id: int, db: Session = Depends(get_db)):
+def delete_comment(comment_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     db_comment = crud_delete_comment(db, comment_id)
     if db_comment is None:
         raise HTTPException(status_code=404, detail="Comentario no encontrado")
     return db_comment
 
 @router.post("/{comment_id}/like", response_model=CommentSchema)
-def like_comment(comment_id: int, db: Session = Depends(get_db)):
+def like_comment(comment_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     db_comment = crud_like_comment(db, comment_id)
     if db_comment is None:
         raise HTTPException(status_code=404, detail="Comentario no encontrado")

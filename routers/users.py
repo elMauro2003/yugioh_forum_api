@@ -8,11 +8,6 @@ from auth import get_actual_user
 
 router = APIRouter()
 
-# @router.post("/", response_model=UserSchema)
-# def create_user(user: UserSchemaCreate, db: Session = Depends(get_db)):
-#     # , usuario=Depends(get_actual_user)
-#     return crud_create_user(db, user)
-
 @router.post("/", response_model=UserSchema)
 def create_user(user: UserSchemaCreate, db: Session = Depends(get_db)):
     # Verificar si el correo ya existe
@@ -32,8 +27,7 @@ def read_user(user_id: int, db: Session = Depends(get_db), usuario=Depends(get_a
     return db_user
 
 @router.get("/", response_model=List[UserSchema])
-def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    # , usuario=Depends(get_actual_user)
+def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
     users = crud_get_all_users(db, skip=skip, limit=limit)
     return users
 
