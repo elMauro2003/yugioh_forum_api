@@ -63,3 +63,16 @@ ALLOWED_HOSTS = <example.com, example2.com >  # default '*'
 ```python
 uvicorn main:app --reload
 ```
+
+
+## Generate migration:
+
+```cmd
+alembic revision  -m "init"
+```
+
+## Apply migration:
+
+```cmd
+alembic upgrade head
+```

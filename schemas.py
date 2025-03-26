@@ -1,69 +1,48 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import List, Optional
 import datetime
 import enum
+from api.post.schema import PostSchema
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
-class PostType(str, enum.Enum):
-    Reporte = "Reporte"
-    Sugerencia = "Sugerencia"
-    Comentario = "Comentario"
 
-class UsuarioBase(BaseModel):
+
+class UserSchemaBase(BaseModel):
     email: str
 
-class UsuarioCreate(UsuarioBase):
-    codigo: str
+class UserSchemaCreate(UserSchemaBase):
+    pass
 
-class UsuarioUpdate(UsuarioBase):
-    codigo: str
+class UserSchemaUpdate(UserSchemaBase):
+    pass
 
-class Usuario(UsuarioBase):
+class UserSchema(UserSchemaBase):
     id: int
-    posts: List['Post'] = []
-    comentarios: List['Comentario'] = []
+    posts: List['PostSchema'] = []
+    comentarios: List['CommentSchema'] = []
 
     class Config:
         orm_mode = True
 
-class PostBase(BaseModel):
-    titulo: str
-    tipo: PostType
-    descripcion: str
 
-class PostCreate(PostBase):
+
+class CommentSchemaBase(BaseModel):
+    description: str
+
+class CommentSchemaCreate(CommentSchemaBase):
     pass
 
-class PostUpdate(PostBase):
+class CommentSchemaUpdate(CommentSchemaBase):
     pass
 
-class Post(PostBase):
-    id: int
-    fecha_creacion: datetime.datetime
-    likes: int
-    usuario_id: int
-    comentarios: List['Comentario'] = []
-
-    class Config:
-        orm_mode = True
-
-class ComentarioBase(BaseModel):
-    descripcion: str
-
-class ComentarioCreate(ComentarioBase):
-    pass
-
-class ComentarioUpdate(ComentarioBase):
-    pass
-
-class Comentario(ComentarioBase):
+class CommentSchema(CommentSchemaBase):
     id: int
     likes: int
     post_id: int
-    usuario_id: int
+    user_id: int
 
     class Config:
         orm_mode = True

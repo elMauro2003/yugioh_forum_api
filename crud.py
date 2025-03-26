@@ -1,126 +1,38 @@
 from sqlalchemy.orm import Session
-from models import Usuario, Post, Comentario
-from schemas import UsuarioCreate, UsuarioUpdate, PostCreate, PostUpdate, ComentarioCreate, ComentarioUpdate
+from api.post.crud import crud_get_post
+from models import User, Post, Comment
+from schemas import  UserSchemaCreate, UserSchemaUpdate, CommentSchemaCreate, CommentSchemaUpdate
 
-def get_usuario(db: Session, usuario_id: int):
-    return db.query(Usuario).filter(Usuario.id == usuario_id).first()
 
-def get_usuarios(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(Usuario).offset(skip).limit(limit).all()
+def crud_get_user(db: Session, user_id: int):
+    return db.query(User).filter(User.id == user_id).first()
 
-def create_usuario(db: Session, usuario: UsuarioCreate):
-    db_usuario = Usuario(email=usuario.email, codigo=usuario.codigo)
-    db.add(db_usuario)
+def crud_get_all_users(db: Session, skip: int = 0, limit: int = 10):
+    return db.query(User).offset(skip).limit(limit).all()
+
+def crud_create_user(db: Session, user: UserSchemaCreate):
+    db_user = User(email=user.email)
+    db.add(db_user)
     db.commit()
-    db.refresh(db_usuario)
-    return db_usuario
+    db.refresh(db_user)
+    return db_user
 
-def update_usuario(db: Session, usuario_id: int, usuario: UsuarioUpdate):
-    db_usuario = get_usuario(db, usuario_id)
-    if db_usuario:
-        db_usuario.email = usuario.email
-        db_usuario.codigo = usuario.codigo
+def crud_update_user(db: Session, user_id: int, user: UserSchemaUpdate):
+    db_user = crud_get_user(db, user_id)
+    if db_user:
+        db_user.email = user.email
+        db_user.code = user.code
         db.commit()
-        db.refresh(db_usuario)
-        return db_usuario
+        db.refresh(db_user)
+        return db_user
     return None
 
-def delete_usuario(db: Session, usuario_id: int):
-    db_usuario = get_usuario(db, usuario_id)
-    if db_usuario:
-        db.delete(db_usuario)
+def crud_delete_user(db: Session, user_id: int):
+    db_user = crud_get_user(db, user_id)
+    if db_user:
+        db.delete(db_user)
         db.commit()
-        return db_usuario
-    return None
-
-
-def get_post(db: Session, post_id: int):
-    return db.query(Post).filter(Post.id == post_id).first()
-
-def get_posts(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(Post).offset(skip).limit(limit).all()
-
-def create_post(db: Session, post: PostCreate, usuario_id: int):
-    db_post = Post(**post.dict(), usuario_id=usuario_id)
-    db.add(db_post)
-    db.commit()
-    db.refresh(db_post)
-    return db_post
-
-def update_post(db: Session, post_id: int, post: PostUpdate):
-    db_post = get_post(db, post_id)
-    if db_post:
-        db_post.titulo = post.titulo
-        db_post.tipo = post.tipo
-        db_post.descripcion = post.descripcion
-        db.commit()
-        db.refresh(db_post)
-        return db_post
-    return None
-
-def delete_post(db: Session, post_id: int):
-    db_post = get_post(db, post_id)
-    if db_post:
-        db.delete(db_post)
-        db.commit()
-        return db_post
-    return None
-
-def like_post(db: Session, post_id: int):
-    db_post = get_post(db, post_id)
-    if db_post:
-        db_post.likes += 1
-        db.commit()
-        db.refresh(db_post)
-        return db_post
+        return db_user
     return None
 
 
-def get_comentario(db: Session, comentario_id: int):
-    return db.query(Comentario).filter(Comentario.id == comentario_id).first()
-
-def get_comentarios(db: Session, skip: int = 0, limit: int = 10):
-    return db.query(Comentario).offset(skip).limit(limit).all()
-
-def create_comentario(db: Session, comentario: ComentarioCreate, post_id: int, usuario_id: int):
-    db_comentario = Comentario(**comentario.dict(), post_id=post_id, usuario_id=usuario_id)
-    db.add(db_comentario)
-    db.commit()
-    db.refresh(db_comentario)
-    return db_comentario
-
-def update_comentario(db: Session, comentario_id: int, comentario: ComentarioUpdate):
-    db_comentario = get_comentario(db, comentario_id)
-    if db_comentario:
-        db_comentario.descripcion = comentario.descripcion
-        db.commit()
-        db.refresh(db_comentario)
-        return db_comentario
-    return None
-
-def delete_comentario(db: Session, comentario_id: int):
-    db_comentario = get_comentario(db, comentario_id)
-    if db_comentario:
-        db.delete(db_comentario)
-        db.commit()
-        return db_comentario
-    return None
-
-
-def like_post(db: Session, post_id: int):
-    db_post = get_post(db, post_id)
-    if db_post:
-        db_post.likes += 1
-        db.commit()
-        db.refresh(db_post)
-        return db_post
-    return None
-
-def like_comentario(db: Session, comentario_id: int):
-    db_comentario = get_comentario(db, comentario_id)
-    if db_comentario:
-        db_comentario.likes += 1
-        db.commit()
-        db.refresh(db_comentario)
-        return db_comentario
-    return None
