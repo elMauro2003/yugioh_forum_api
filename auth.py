@@ -14,7 +14,7 @@ from fastapi import Depends
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 # Configuración de JWT
-SECRET_KEY = config("SECRET_KEY", default="secret_key")  # Cambia esto en producción
+SECRET_KEY = config("SECRET_KEY", default="secret_key")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 15  # Duración del token de acceso (en minutos)
 REFRESH_TOKEN_EXPIRE_DAYS = 7     # Duración del token de actualización (en días)
