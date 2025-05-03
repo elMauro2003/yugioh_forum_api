@@ -11,15 +11,9 @@ class PostCategory(enum.Enum):
     Vote = "Vote"
     Error = "Error"
 
-
-class PostType(enum.Enum):
-    Report = "Report"
-    Suggestion = "Suggestion"
-    Comment = "Comment"
     
 class PostSchemaCreate(BaseModel):
     title: str
-    type: PostType
     category: PostCategory
     description: str
 
@@ -34,7 +28,6 @@ class Post(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     create_at = Column(DateTime, default=datetime.datetime.utcnow)
-    type = Column(Enum(PostType))
     category = Column(Enum(PostCategory))
     description = Column(String)
     likes = Column(Integer, default=0)

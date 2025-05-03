@@ -18,15 +18,8 @@ class PostCategory(str, enum.Enum):
     Vote = "Vote"
     Error = "Error"
 
-
-class PostType(str, enum.Enum):
-    Report = "Report"
-    Suggestion = "Suggestion"
-    Comment = "Comment"
-
 class PostSchemaBase(BaseModel):
     title: str
-    type: PostType
     category: PostCategory
     description: str
 

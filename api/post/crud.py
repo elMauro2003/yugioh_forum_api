@@ -16,20 +16,19 @@ def crud_create_post(db: Session, post: PostSchemaCreate, user_id: int):
     db.refresh(db_post)
     return db_post
 
-def crud_update_post(db: Session, post_id: int, post: PostSchemaUpdate):
+def crud_update_post(db: Session, post_id: int, post: PostSchemaUpdate, user_id: int):
     db_post = crud_get_post(db, post_id)
-    if db_post:
-        db_post.titulo = post.titulo
-        db_post.tipo = post.tipo
-        db_post.descripcion = post.descripcion
+    if db_post and db_post.user_id == user_id:
+        db_post.title = post.title
+        db_post.description = post.description
         db.commit()
         db.refresh(db_post)
         return db_post
     return None
 
-def crud_delete_post(db: Session, post_id: int):
+def crud_delete_post(db: Session, post_id: int,user_id: int):
     db_post = crud_get_post(db, post_id)
-    if db_post:
+    if db_post and db_post.user_id == user_id:
         db.delete(db_post)
         db.commit()
         return db_post

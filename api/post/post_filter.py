@@ -13,15 +13,9 @@ class PostCategory(str, enum.Enum):
     Error = "Error"
 
 
-class PostType(str, enum.Enum):
-    Report = "Report"
-    Suggestion = "Suggestion"
-    Comment = "Comment"
-
 
 class PostFilter(Filter):
     title__ilike: Optional[str]= None
-    type : Optional[str] = None
     category : Optional[str] = None
     description__ilike: Optional[str]= None
     order_by: Optional[list[str]] = None

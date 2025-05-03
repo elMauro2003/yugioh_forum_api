@@ -14,14 +14,14 @@ from auth import get_actual_user
 router = APIRouter()
 
 @router.post("/")
-def create_post(post: PostSchemaCreate, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
+def create_post(post: PostSchemaCreate, db: Session = Depends(get_db), userPermission=Depends(get_actual_user)):
     # Crear un nuevo post asociado al usuario autenticado
     nuevo_post = Post(
         title=post.title,
         type=post.type,
         category=post.category,
         description=post.description,
-        user_id=usuario.id,  # Obtener el ID del usuario autenticado
+        user_id=userPermission.id,  # Obtener el ID del usuario autenticado
         create_at=datetime.utcnow()
     )
     db.add(nuevo_post)
@@ -30,7 +30,7 @@ def create_post(post: PostSchemaCreate, db: Session = Depends(get_db), usuario=D
     return nuevo_post
 
 @router.get("/{post_id}", response_model=PostSchema)
-def read_post(post_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
+def read_post(post_id: int, db: Session = Depends(get_db)):
     db_post = crud_get_post(db, post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")
@@ -38,7 +38,7 @@ def read_post(post_id: int, db: Session = Depends(get_db), usuario=Depends(get_a
 
 @router.get("/")
 async def get_all_posts(
-    db: Session = Depends(get_db), usuario=Depends(get_actual_user),
+    db: Session = Depends(get_db),
     post_filter: PostFilter = FilterDepends(with_prefix("post", PostFilter), by_alias=True),
     page: int = 1,
     limit: int = 25,
@@ -62,21 +62,21 @@ async def get_all_posts(
     }
 
 @router.put("/{post_id}", response_model=PostSchema)
-def update_post(post_id: int, post: PostSchemaUpdate, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
-    db_post = crud_update_post(db, post_id, post)
+def update_post(post_id: int, post: PostSchemaUpdate, db: Session = Depends(get_db), userPermission=Depends(get_actual_user)):
+    db_post = crud_update_post(db, post_id, post, userPermission.id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")
     return db_post
 
 @router.delete("/{post_id}", response_model=PostSchema)
-def delete_post(post_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
-    db_post = crud_delete_post(db, post_id)
+def delete_post(post_id: int, db: Session = Depends(get_db), userPermission=Depends(get_actual_user)):
+    db_post = crud_delete_post(db, post_id,userPermission.id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")
     return db_post
 
 @router.post("/{post_id}/like", response_model=PostSchema)
-def like_post(post_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
+def like_post(post_id: int, db: Session = Depends(get_db), userPermission=Depends(get_actual_user)):
     db_post = crud_like_post(db, post_id)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")
