@@ -31,6 +31,7 @@ class Post(Base):
     category = Column(Enum(PostCategory))
     description = Column(String)
     likes = Column(Integer, default=0)
+    slug = Column(String, unique=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     
     user = relationship("User", back_populates="posts")

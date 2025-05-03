@@ -14,14 +14,14 @@ from auth import get_actual_user
 router = APIRouter()
 
 @router.post("/")
-def create_post(post: PostSchemaCreate, db: Session = Depends(get_db), userPermission=Depends(get_actual_user)):
+def create_post(post: PostSchemaCreate, db: Session = Depends(get_db), userPermission=Depends(get_actual_user)): #
     # Crear un nuevo post asociado al usuario autenticado
     nuevo_post = Post(
         title=post.title,
-        type=post.type,
-        category=post.category,
+        category=post.category, 
+        slug = f"{post.title.replace(' ', '-').lower()}-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}", # Generar un slug único
         description=post.description,
-        user_id=userPermission.id,  # Obtener el ID del usuario autenticado
+        user_id = userPermission.id, # Obtener el ID del usuario autenticado
         create_at=datetime.utcnow()
     )
     db.add(nuevo_post)
