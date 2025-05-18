@@ -3,8 +3,8 @@ from models import Post
 from api.post.schema import PostSchemaCreate, PostSchemaUpdate
 
 
-def crud_get_post(db: Session, post_id: int):
-    return db.query(Post).filter(Post.id == post_id).first()
+def crud_get_post(db: Session, post_slug: str):
+    return db.query(Post).filter(Post.slug == post_slug).first()
 
 def crud_get_all_posts(db: Session, skip: int = 0, limit: int = 10):
     return db.query(Post).offset(skip).limit(limit).all()

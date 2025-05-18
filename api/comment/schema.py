@@ -23,7 +23,8 @@ class CommentSchemaUpdate(CommentSchemaBase):
 class CommentSchema(CommentSchemaBase):
     id: int
     likes: int
-    create_at: datetime.datetime
+    create_date_at: datetime.date
+    create_time_at: datetime.time
     post_id: int
     user: UserSchema
 

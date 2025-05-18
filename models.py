@@ -1,9 +1,10 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Date, Time
 from sqlalchemy.orm import relationship
 from database import Base
 import enum
 import datetime
 from pydantic import BaseModel
+
 
 class PostCategory(enum.Enum):
     Actualitation = "Actualitation"
@@ -27,7 +28,8 @@ class Post(Base):
     __tablename__ = "posts"
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
-    create_at = Column(DateTime, default=datetime.datetime.utcnow)
+    create_date_at = Column(Date, default=datetime.datetime.today())
+    create_time_at = Column(Time, default=lambda: datetime.datetime.now().time())
     category = Column(Enum(PostCategory))
     description = Column(String)
     likes = Column(Integer, default=0)
@@ -43,7 +45,8 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, index=True)
     description = Column(String)
     likes = Column(Integer, default=0)
-    create_at = Column(DateTime, default=datetime.datetime.utcnow)
+    create_date_at = Column(Date, default=datetime.datetime.today())
+    create_time_at = Column(Time, default=lambda: datetime.datetime.now().time())
     post_id = Column(Integer, ForeignKey("posts.id"))
     user_id = Column(Integer, ForeignKey("users.id"))
 

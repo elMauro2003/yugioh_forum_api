@@ -22,16 +22,17 @@ def create_post(post: PostSchemaCreate, db: Session = Depends(get_db), userPermi
         slug = f"{post.title.replace(' ', '-').lower()}-{datetime.utcnow().strftime('%Y%m%d%H%M%S')}", # Generar un slug único
         description=post.description,
         user_id = userPermission.id, # Obtener el ID del usuario autenticado
-        create_at=datetime.utcnow()
+        create_date_at=datetime.today(),
+        create_time_at=datetime.now().time()
     )
     db.add(nuevo_post)
     db.commit()
     db.refresh(nuevo_post)
     return nuevo_post
 
-@router.get("/{post_id}", response_model=PostSchema)
-def read_post(post_id: int, db: Session = Depends(get_db)):
-    db_post = crud_get_post(db, post_id)
+@router.get("/{post_slug}", response_model=PostSchema)
+def read_post(post_slug: str, db: Session = Depends(get_db)):
+    db_post = crud_get_post(db, post_slug)
     if db_post is None:
         raise HTTPException(status_code=404, detail="Post no encontrado")
     return db_post

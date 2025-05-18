@@ -8,7 +8,7 @@ from models import Comment
 
 class CommentFilter(Filter):
     post_id: Optional[int]= None
-    order_by: Optional[list[str]] = ["-create_at"]
+    order_by: Optional[list[str]] = ["create_date_at","create_time_at"]
     
     class Constants(Filter.Constants):
         model = Comment

@@ -27,7 +27,7 @@ def read_user(user_id: int, db: Session = Depends(get_db), userPermission=Depend
     return db_user
 
 @router.get("/", response_model=List[UserSchema])
-def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), userPermission=Depends(get_actual_user)):
+def read_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     users = crud_get_all_users(db, skip=skip, limit=limit)
     return users
 

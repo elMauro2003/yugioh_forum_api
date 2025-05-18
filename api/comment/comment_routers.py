@@ -9,15 +9,17 @@ from api.comment.comment_filter import CommentFilter
 from sqlalchemy import select, func
 from fastapi_filter import FilterDepends, with_prefix
 from auth import get_actual_user
+from models import Post
 
 router = APIRouter()
 
 @router.post("/", response_model=CommentSchema)
-def create_comment(comment: CommentSchemaCreate, post_id: int, user_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
-    return crud_create_comment(db, comment, post_id, user_id)
+def create_comment(comment: CommentSchemaCreate, post_slug: str, db: Session = Depends(get_db), user=Depends(get_actual_user)):
+    post = db.query(Post).filter(Post.slug == post_slug).first()
+    return crud_create_comment(db, comment, post.id, user.id)
 
 @router.get("/{comment_id}", response_model=CommentSchema)
-def read_comment(comment_id: int, db: Session = Depends(get_db), usuario=Depends(get_actual_user)):
+def read_comment(comment_id: int, db: Session = Depends(get_db), user=Depends(get_actual_user)):
     db_comment = crud_get_comment(db, comment_id)
     if db_comment is None:
         raise HTTPException(status_code=404, detail="Comentario no encontrado")
@@ -25,7 +27,7 @@ def read_comment(comment_id: int, db: Session = Depends(get_db), usuario=Depends
 
 @router.get("/")
 async def get_all_comments(
-    db: Session = Depends(get_db), usuario=Depends(get_actual_user),
+    db: Session = Depends(get_db),
     comment_filter: CommentFilter = FilterDepends(with_prefix("comment", CommentFilter), by_alias=True),
     page: int = 1,
     limit: int = 25,

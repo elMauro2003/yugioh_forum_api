@@ -22,6 +22,7 @@ class PostSchemaBase(BaseModel):
     title: str
     category: PostCategory
     description: str
+    
 
 class PostSchemaCreate(PostSchemaBase):
     pass
@@ -31,7 +32,9 @@ class PostSchemaUpdate(PostSchemaBase):
 
 class PostSchema(PostSchemaBase):
     id: int
-    create_at: datetime.datetime
+    slug : str
+    create_date_at: datetime.date
+    create_time_at: datetime.time
     likes: int
     user: UserSchema
     comments: List['CommentSchema'] = []
@@ -50,7 +53,8 @@ class PostSchema(PostSchemaBase):
 class CommentSchema(BaseModel):
     id: int
     likes: int
-    create_at: datetime.datetime
+    create_date_at: datetime.date
+    create_time_at: datetime.time
     description: str
     user: UserSchema
 
